@@ -1,5 +1,5 @@
  **DevOps with Snowflake**
- Created by AflahZul, Date: 3rd December
+- {Created by AflahZul, Date: 3rd December}
 
 # 🚀 DevOps with Snowflake: DataOps Cheatsheet
 
