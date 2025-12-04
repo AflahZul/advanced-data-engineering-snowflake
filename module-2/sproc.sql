@@ -3,6 +3,7 @@ USE DATABASE staging_tasty_bytes;
 USE SCHEMA raw_pos;
 
 -- Configure logging level:
+ALTER ACCOUNT SET LOG_LEVEL = 'INFO';
 
 -- Create the stored procedure, define its logic with Snowpark for Python, write sales to raw_pos.daily_sales_hamburg_t
 CREATE OR REPLACE PROCEDURE staging_tasty_bytes.raw_pos.process_order_headers_stream()
@@ -21,7 +22,7 @@ def process_order_headers_stream(session: Session) -> float:
     logger = logging.getLogger('order_headers_stream_sproc')
     
     # Log procedure start:
-    
+    logger.info("Starting process_order_headers_stream procedure")
     
     try:
         # Query the stream
@@ -41,7 +42,7 @@ def process_order_headers_stream(session: Session) -> float:
         
         # Log the count of filtered records:
         hamburg_count = hamburg_orders.count()
-        
+        logger.info(f"Found {hamburg_count} orders from Hamburg")
         
         '''
         # Calculate the sum of sales in Hamburg
@@ -61,6 +62,8 @@ def process_order_headers_stream(session: Session) -> float:
         daily_sales.write.mode("append").save_as_table("raw_pos.daily_sales_hamburg_t")
         '''
         # Log successful completion:
+
+        logger.info("Procedure completed successfully")
         
         return "Daily sales for Hamburg, Germany have been successfully written to raw_pos.daily_sales_hamburg_t"
     
